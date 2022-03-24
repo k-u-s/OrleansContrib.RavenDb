@@ -9,11 +9,10 @@ This includes
 
  - Reminders (IReminderTable)
  - Storage (IGrainStorage)
-
-
+ 
 ## Installation
 
-TODO
+TODO: nuget instal cmd
 
 ## Setup
 
@@ -21,16 +20,16 @@ All steps assume that you have running ravendb instance available on localhost o
 
 ### Storage
 
-TODO
+TODO: add sample code that shows how to register storage provider
 
 ### Reminders
 
-TODO
+TODO: add sample code that shows how to register reminder table
 
-## Development
+## Contributions
 
-TODO
+PRs and feedback are very welcome!
 
-## Remarks
+## License
 
-TODO
+This project is released under the [MIT license](https://github.com/k-u-s/OrleansContrib.RavenDb/blob/master/LICENSE).
