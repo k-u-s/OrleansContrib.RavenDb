@@ -3,16 +3,16 @@
 
 TODO: Add badges with links to version, test coverage etc.
 
-[RavenDb](https://github.com/ravendb/ravendb) implementation of the Orleans Providers.
+[RavenDb](https://github.com/ravendb/ravendb) implementation of the [Orleans](https://github.com/dotnet/orleans) Providers.
 
 This includes
 
- - Reminders (IReminderTable)
- - Storage (IGrainStorage)
- 
+ - [Storage](https://dotnet.github.io/orleans/docs/grains/grain_persistence/index.html) (IGrainStorage)
+ - [Reminders](https://dotnet.github.io/orleans/docs/grains/timers_and_reminders.html#configuration) (IReminderTable)
+
 ## Installation
 
-TODO: nuget instal cmd
+TODO: add nuget install cmd
 
 ## Setup
 
