@@ -1,0 +1,19 @@
+
+---
+name: Tests
+
+on: push
+
+jobs:
+  tests:
+    name: Testing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet: [ '6.0.x' ]
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+      - run: dotnet test 
