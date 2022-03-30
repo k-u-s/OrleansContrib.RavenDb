@@ -140,6 +140,6 @@ internal class RemindersTableManager
     
     private IAsyncDocumentSession CreateSession() 
         => string.IsNullOrEmpty(_options.DatabaseName)
-        ? _documentStore.OpenAsyncSession()
-        : _documentStore.OpenAsyncSession(_options.DatabaseName);
+            ? _documentStore.OpenAsyncSession()
+            : _documentStore.OpenAsyncSession(_options.DatabaseName);
 }

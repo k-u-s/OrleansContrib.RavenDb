@@ -21,11 +21,8 @@ public class ReminderTestGrain : Grain, IReminderTestGrain, IRemindable
     Dictionary<string, long> sequence;
     private TimeSpan period;
 
-    private static long
-        _aCcuracy = 50 *
-                   TimeSpan
-                       .TicksPerMillisecond; // when we use ticks to compute sequence numbers, we might get wrong results as timeouts don't happen with precision of ticks  ... we keep this as a leeway
-
+    // when we use ticks to compute sequence numbers, we might get wrong results as timeouts don't happen with precision of ticks  ... we keep this as a leeway
+    private static long _aCcuracy = 50 * TimeSpan.TicksPerMillisecond; 
     private ILogger logger;
     private string myId; // used to distinguish during debugging between multiple activations of the same grain
 
@@ -45,8 +42,7 @@ public class ReminderTestGrain : Grain, IReminderTestGrain, IRemindable
         sequence = new Dictionary<string, long>();
         period = GetDefaultPeriod(logger);
         logger.Info("OnActivateAsync.");
-        filePrefix = $"g{this.GetGrainIdentity().PrimaryKey}_";
-        ; // TODO: ? "g" + this.Identity.PrimaryKey + "_";
+        filePrefix = $"g_{this.GetGrainIdentity().PrimaryKey}_"; // TODO: ? "g" + this.Identity.PrimaryKey + "_";
         return GetMissingReminders();
     }
 
@@ -76,7 +72,7 @@ public class ReminderTestGrain : Grain, IReminderTestGrain, IRemindable
         return r;
     }
 
-    public Task ReceiveReminder(string reminderName, TickStatus status)
+    public async Task ReceiveReminder(string reminderName, TickStatus status)
     {
         // it can happen that due to failure, when a new activation is created, 
         // it doesn't know which reminders were registered against the grain
@@ -108,7 +104,7 @@ public class ReminderTestGrain : Grain, IReminderTestGrain, IRemindable
         {
             logger.Info("ReceiveReminder: {0} Incorrect tick {1} vs. {2} with status {3}.", reminderName,
                 sequence[reminderName], sequenceNumber, status);
-            return Task.CompletedTask;
+            return;
         }
 
         sequence[reminderName] = sequenceNumber;
@@ -117,9 +113,7 @@ public class ReminderTestGrain : Grain, IReminderTestGrain, IRemindable
 
         var fileName = GetFileName(reminderName);
         var counterValue = sequence[reminderName].ToString(CultureInfo.InvariantCulture);
-        File.WriteAllText(fileName, counterValue);
-
-        return Task.CompletedTask;
+        await File.WriteAllTextAsync(fileName, counterValue);
     }
 
     public async Task StopReminder(string reminderName)
@@ -176,12 +170,12 @@ public class ReminderTestGrain : Grain, IReminderTestGrain, IRemindable
         return Task.FromResult(period);
     }
 
-    public Task<long> GetCounter(string name)
+    public async Task<long> GetCounter(string name)
     {
         var fileName = GetFileName(name);
-        var data = File.ReadAllText(fileName);
+        var data = await File.ReadAllTextAsync(fileName);
         var counterValue = long.Parse(data);
-        return Task.FromResult(counterValue);
+        return counterValue;
     }
 
     public Task<IGrainReminder> GetReminderObject(string reminderName)
@@ -194,10 +188,7 @@ public class ReminderTestGrain : Grain, IReminderTestGrain, IRemindable
         return await GetReminders();
     }
 
-    private string GetFileName(string reminderName)
-    {
-        return string.Format("{0}{1}", filePrefix, reminderName);
-    }
+    private string GetFileName(string reminderName) => $"{filePrefix}{reminderName}";
 
     public static TimeSpan GetDefaultPeriod(ILogger log)
     {
@@ -289,7 +280,7 @@ public class ReminderTestCopyGrain : Grain, IReminderTestCopyGrain, IRemindable
         return r;
     }
 
-    public Task ReceiveReminder(string reminderName, TickStatus status)
+    public async Task ReceiveReminder(string reminderName, TickStatus status)
     {
         // it can happen that due to failure, when a new activation is created, 
         // it doesn't know which reminders were registered against the grain
@@ -321,15 +312,13 @@ public class ReminderTestCopyGrain : Grain, IReminderTestCopyGrain, IRemindable
         {
             logger.Info("{0} Incorrect tick {1} vs. {2} with status {3}.", reminderName,
                 sequence[reminderName], sequenceNumber, status);
-            return Task.CompletedTask;
+            return;
         }
 
         sequence[reminderName] = sequenceNumber;
         logger.Info("{0} Sequence # {1} with status {2}.", reminderName, sequence[reminderName], status);
 
-        File.WriteAllText(GetFileName(reminderName), sequence[reminderName].ToString());
-
-        return Task.CompletedTask;
+        await File.WriteAllTextAsync(GetFileName(reminderName), sequence[reminderName].ToString());
     }
 
     public async Task StopReminder(string reminderName)

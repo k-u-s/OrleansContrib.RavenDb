@@ -93,13 +93,12 @@ public class BaseReminderIntegrationTestsRunner : IDisposable
         Log.Info("Start Grain Id = {0}", id);
         var grain = GrainFactory.GetGrain<IReminderTestGrain>(id);
         const int count = 5;
-        var startReminderTasks = new Task<IGrainReminder>[count];
-        for (var i = 0; i < count; i++)
-        {
-            startReminderTasks[i] = grain.StartReminder($"{Dr}_{i}");
-            Log.Info("Started {0}_{1}", Dr, i);
-        }
-
+        var startReminderTasks = Enumerable.Range(0, count).Select(i =>
+            {
+                var task = grain.StartReminder($"{Dr}_{i}");
+                Log.Info("Started {0}_{1}", Dr, i);
+                return task;
+            }).ToArray();
         await Task.WhenAll(startReminderTasks);
         // do comparison on strings
         var registered = (from reminder in startReminderTasks select reminder.Result.ReminderName).ToList();
@@ -120,7 +119,7 @@ public class BaseReminderIntegrationTestsRunner : IDisposable
         // do some time tests as well
         Log.Info("Time tests");
         var period = await grain.GetReminderPeriod(Dr);
-        await Task.Delay(period.Multiply(2.5) + Leeway); // giving some leeway
+        await Task.Delay(period.Multiply(2.3) + Leeway); // giving some leeway
         for (var i = 0; i < count; i++)
         {
             var curr = await grain.GetCounter($"{Dr}_{i}");
