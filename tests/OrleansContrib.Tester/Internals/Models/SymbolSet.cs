@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OrleansContrib.Tester.Internals;
+namespace OrleansContrib.Tester.Internals.Models;
 
 
     /// <summary>

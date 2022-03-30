@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Orleans.Hosting;
 using Orleans.TestingHost;
 using OrleansContrib.Persistence.RavenDb.Extensions;
-using OrleansContrib.Reminders.RavenDb.Tests;
+using OrleansContrib.RavenDb.Tester;
 using OrleansContrib.Tester;
 using OrleansContrib.Tester.Persistence;
 using Xunit;

@@ -9,7 +9,7 @@ using Orleans.TestingHost.Utils;
 using OrleansContrib.Persistence.RavenDb.Extensions;
 using OrleansContrib.Persistence.RavenDb.Options;
 using OrleansContrib.Persistence.RavenDb.StorageProviders;
-using OrleansContrib.Reminders.RavenDb.Tests;
+using OrleansContrib.RavenDb.Tester;
 using OrleansContrib.Tester;
 using OrleansContrib.Tester.Persistence;
 using Xunit;

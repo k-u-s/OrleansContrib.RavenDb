@@ -2,6 +2,7 @@ using System;
 using Orleans;
 using Orleans.Runtime;
 using OrleansContrib.Tester.Internals;
+using OrleansContrib.Tester.Internals.Models;
 using Xunit;
 
 namespace OrleansContrib.Tester.Persistence.States;

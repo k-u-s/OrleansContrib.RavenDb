@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace OrleansContrib.Tester.Internals;
+namespace OrleansContrib.Tester.Internals.Models;
 
 
 /// <summary>

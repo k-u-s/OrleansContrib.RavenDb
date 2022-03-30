@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Hosting;
 using Orleans.TestingHost;
+using OrleansContrib.RavenDb.Tester;
 using OrleansContrib.Reminders.RavenDb.Extensions;
 using OrleansContrib.Tester;
 using OrleansContrib.Tester.Reminders;

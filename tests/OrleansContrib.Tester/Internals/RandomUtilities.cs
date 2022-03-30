@@ -4,6 +4,7 @@ using System.Text;
 using Orleans;
 using Orleans.Internal;
 using Orleans.Runtime;
+using OrleansContrib.Tester.Internals.Models;
 using OrleansContrib.Tester.Persistence.Grains;
 
 namespace OrleansContrib.Tester.Internals;

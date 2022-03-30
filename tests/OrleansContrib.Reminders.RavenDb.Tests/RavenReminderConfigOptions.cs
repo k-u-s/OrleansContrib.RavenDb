@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using OrleansContrib.RavenDb.Tester;
 using OrleansContrib.Reminders.RavenDb.Options;
 
 namespace OrleansContrib.Reminders.RavenDb.Tests;

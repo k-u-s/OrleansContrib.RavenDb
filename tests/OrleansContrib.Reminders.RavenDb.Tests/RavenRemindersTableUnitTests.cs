@@ -6,6 +6,7 @@ using Orleans.Hosting;
 using Orleans.Runtime;
 using Orleans.TestingHost;
 using Orleans.TestingHost.Utils;
+using OrleansContrib.RavenDb.Tester;
 using OrleansContrib.Reminders.RavenDb.Extensions;
 using OrleansContrib.Reminders.RavenDb.Options;
 using OrleansContrib.Reminders.RavenDb.Reminders;

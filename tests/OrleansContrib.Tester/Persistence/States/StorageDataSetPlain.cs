@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Orleans;
 using Orleans.Runtime;
 using OrleansContrib.Tester.Internals;
+using OrleansContrib.Tester.Internals.Models;
 
 namespace OrleansContrib.Tester.Persistence.States;
 

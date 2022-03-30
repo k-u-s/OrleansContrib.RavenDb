@@ -5,7 +5,7 @@ using System.Threading;
 using Raven.Client.Documents;
 using Raven.Embedded;
 
-namespace OrleansContrib.Reminders.RavenDb.Tests;
+namespace OrleansContrib.RavenDb.Tester;
 
 public static class StoreHolder
 {
@@ -14,7 +14,7 @@ public static class StoreHolder
     public const string BaseDir = "./tmp/raven/";
     public const string DefaultDatabaseName = "OrleansEmbedded";
     public const string DebuggerServerUrl = "http://127.0.0.1:48088";
-    public const long WaitForNonStaleMillis = 10_000;
+    public const long WaitForNonStaleMillis = 60_000;
     
     private static IDocumentStore CreateDocumentStore()
     {
