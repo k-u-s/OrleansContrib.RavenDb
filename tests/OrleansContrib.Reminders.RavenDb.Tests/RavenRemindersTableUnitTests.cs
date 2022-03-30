@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans;
@@ -64,11 +65,12 @@ public class RavenRemindersTableUnitTests : BaseReminderTableUnitTests, IClassFi
         var options = Microsoft.Extensions.Options.Options.Create(ravenOptions);
         var converter = ClusterFixture.HostedCluster.ServiceProvider.GetRequiredService<IGrainReferenceConverter>();
         //var documentStore = ClusterFixture.HostedCluster.ServiceProvider.GetRequiredService<IDocumentStore>();
-        var documentStore = StoreHolder.DocumentStore;
+        var sp = default(IServiceProvider);
+        ravenOptions.DocumentStoreProvider = _ => StoreHolder.DocumentStore;
 
         return new ReminderTable(
             converter,
-            documentStore,
+            sp,
             LoggerFactory,
             ClusterOptions,
             options);

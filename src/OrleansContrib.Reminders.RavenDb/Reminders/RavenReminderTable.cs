@@ -9,6 +9,7 @@ using Orleans.Runtime;
 using OrleansContrib.Reminders.RavenDb.Options;
 using OrleansContrib.Reminders.RavenDb.Utilities;
 using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 
 namespace OrleansContrib.Reminders.RavenDb.Reminders;
 
@@ -24,7 +25,7 @@ public class ReminderTable : IReminderTable
         
     public ReminderTable(
         IGrainReferenceConverter grainReferenceConverter,
-        IDocumentStore documentStore,
+        IServiceProvider serviceProvider,
         ILoggerFactory loggerFactory,
         IOptions<ClusterOptions> clusterOptions,
         IOptions<ReminderTableOptions> storageOptions)
@@ -34,6 +35,7 @@ public class ReminderTable : IReminderTable
         _loggerFactory = loggerFactory;
         _clusterOptions = clusterOptions.Value;
         _storageOptions = storageOptions.Value;
+        var documentStore = _storageOptions.DocumentStoreProvider(serviceProvider);
         _remTableManager = new RemindersTableManager(
             _clusterOptions.ServiceId,
             _clusterOptions.ClusterId,

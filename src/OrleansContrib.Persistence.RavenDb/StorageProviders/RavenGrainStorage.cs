@@ -9,6 +9,7 @@ using Orleans.Runtime;
 using Orleans.Storage;
 using OrleansContrib.Persistence.RavenDb.Options;
 using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 using Raven.Client.Exceptions;
 
 namespace OrleansContrib.Persistence.RavenDb.StorageProviders;
@@ -18,19 +19,19 @@ public class GrainStorage : IGrainStorage, ILifecycleParticipant<ISiloLifecycle>
     private readonly string _storageName;
     private readonly GrainStorageOptions _options;
     private readonly ClusterOptions _clusterOptions;
-    private readonly IDocumentStore _store;
+    private readonly IDocumentStore _documentStore;
     private readonly ILogger<GrainStorage> _logger;
 
     public GrainStorage(string storageName, 
         GrainStorageOptions options, 
+        IServiceProvider serviceProvider,
         IOptions<ClusterOptions> clusterOptions, 
-        IDocumentStore store,
         ILogger<GrainStorage> logger)
     {
         _storageName = storageName;
         _options = options;
         _clusterOptions = clusterOptions.Value;
-        _store = store;
+        _documentStore = options.DocumentStoreProvider(serviceProvider);
         _logger = logger;
     }
 
@@ -51,7 +52,7 @@ public class GrainStorage : IGrainStorage, ILifecycleParticipant<ISiloLifecycle>
         var grainId = GetKeyString(grainType, grainReference);
         try
         {
-            using var session = _store.OpenAsyncSession();
+            using var session = CreateSession();
 
             var state = await session.LoadAsync<object>(grainId);
             if (state is null)
@@ -78,7 +79,7 @@ public class GrainStorage : IGrainStorage, ILifecycleParticipant<ISiloLifecycle>
         var grainId = GetKeyString(grainType, grainReference);
         try
         {
-            using var session = _store.OpenAsyncSession();
+            using var session = CreateSession();
 
             var eTag = grainState.ETag;
             var state = grainState.State;
@@ -116,7 +117,7 @@ public class GrainStorage : IGrainStorage, ILifecycleParticipant<ISiloLifecycle>
         var grainId = GetKeyString(grainType, grainReference);
         try
         {
-            using var session = _store.OpenAsyncSession();
+            using var session = CreateSession();
             var state = await session.LoadAsync<object>(grainId);
 
             if (state is null)
@@ -150,4 +151,9 @@ public class GrainStorage : IGrainStorage, ILifecycleParticipant<ISiloLifecycle>
             ? $"{_clusterOptions.ServiceId}{separator}{grainReference.ToKeyString()}{separator}{grainType}"
             : $"{_options.KeyPrefix}{prefixSeparator}{_clusterOptions.ServiceId}{separator}{grainReference.ToKeyString()}{separator}{grainType}";
     }
+    
+    private IAsyncDocumentSession CreateSession() 
+        => string.IsNullOrEmpty(_options.DatabaseName)
+            ? _documentStore.OpenAsyncSession()
+            : _documentStore.OpenAsyncSession(_options.DatabaseName);
 }

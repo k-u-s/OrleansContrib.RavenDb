@@ -7,6 +7,7 @@ using OrleansContrib.Reminders.RavenDb.Options;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Operations;
+using Raven.Client.Documents.Session;
 
 namespace OrleansContrib.Reminders.RavenDb.Reminders;
 
@@ -34,7 +35,7 @@ internal class RemindersTableManager
 
     internal async Task<List<(ReminderTableEntry Entity, string ETag)>> FindReminderEntries(long begin, long end)
     {
-        using var session = _documentStore.OpenAsyncSession();
+        using var session = CreateSession();
         var baseQuery = session.Query<ReminderTableEntry>()
             .Statistics(out var stats);
         if (_options.WaitForNonStaleMillis.HasValue)
@@ -66,7 +67,7 @@ internal class RemindersTableManager
 
     internal async Task<List<(ReminderTableEntry Entity, string ETag)>> FindReminderEntries(string grainKey)
     {
-        using var session = _documentStore.OpenAsyncSession();
+        using var session = CreateSession();
         var baseQuery = session.Query<ReminderTableEntry>()
                 .Statistics(out var stats)
             ;
@@ -90,7 +91,7 @@ internal class RemindersTableManager
     internal async Task<(ReminderTableEntry Entity, string ETag)> FindReminderEntry(string grainKey, string reminderName)
     {
         var rowKey = ReminderTableEntry.ConstructRowKey(_options.KeyPrefix, grainKey, reminderName);
-        using var session = _documentStore.OpenAsyncSession();
+        using var session = CreateSession();
         var result = await session.LoadAsync<ReminderTableEntry>(rowKey);
         if (result is null)
             return (null, string.Empty);
@@ -100,7 +101,7 @@ internal class RemindersTableManager
 
     internal async Task<string> UpsertRow(ReminderTableEntry reminderEntry)
     {
-        using var session = _documentStore.OpenAsyncSession();
+        using var session = CreateSession();
             
         await session.StoreAsync(reminderEntry);
         await session.SaveChangesAsync();
@@ -111,7 +112,7 @@ internal class RemindersTableManager
 
     internal async Task<bool> DeleteReminderEntryConditionally(ReminderTableEntry reminderEntry, string eTag)
     {
-        using var session = _documentStore.OpenAsyncSession();
+        using var session = CreateSession();
         var exist = await session.Advanced.ExistsAsync(reminderEntry.Id);
         if (!exist)
             return false;
@@ -136,4 +137,9 @@ internal class RemindersTableManager
             .ForDatabase(databaseName)
             .SendAsync(new DeleteByQueryOperation($"from {collectionName}"));
     }
+    
+    private IAsyncDocumentSession CreateSession() 
+        => string.IsNullOrEmpty(_options.DatabaseName)
+        ? _documentStore.OpenAsyncSession()
+        : _documentStore.OpenAsyncSession(_options.DatabaseName);
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -64,15 +65,17 @@ public class RavenGrainStorageUnitTests : BaseGrainStorageUnitTests, IClassFixtu
     {
         var ravenOptions = new GrainStorageOptions();
         PersistenceConfigOptions.ConfigureDefaultStoreOptions(ravenOptions);
+
+        var sp = default(IServiceProvider);
+        ravenOptions.DocumentStoreProvider = _ => StoreHolder.DocumentStore;
         
-        var documentStore = StoreHolder.DocumentStore;
         var logger = LoggerFactory.CreateLogger<GrainStorage>();
         
         var storage = new GrainStorage(
             TestConstants.StorageProviderForTest,
             ravenOptions,
+            sp,
             ClusterOptions,
-            documentStore,
             logger);
         return Task.FromResult((IGrainStorage)storage);
     }
