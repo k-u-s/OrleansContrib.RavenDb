@@ -88,18 +88,28 @@ public class BaseReminderTableTestsRunner
         
         Assert.Equal(reminderRowCount, iterations);
 
+        // Test range that should return all
         rows = await remindersTable.ReadRows(0, 0);
         reminderRowCount = rows.Reminders.Count;
         
         Assert.Equal(reminderRowCount, iterations);
 
         var remindersHashes = rows.Reminders.Select(r => r.GrainRef.GetUniformHashCode()).ToArray();
-
         var random = new SafeRandom();
 
-        await Task.WhenAll(Enumerable.Range(0, iterations).Select(i =>
-            TestRemindersHashInterval(remindersTable, (uint)random.Next(), (uint)random.Next(),
-                remindersHashes)));
+        var hash = remindersHashes[remindersHashes.Length / 2];
+        
+        // Test range that should return exactly one value
+        await TestRemindersHashInterval(remindersTable, hash, hash + 1, remindersHashes);
+        
+        // Test range that should return all except one value
+        await TestRemindersHashInterval(remindersTable, hash + 1, hash, remindersHashes);
+        
+        await Task.WhenAll(
+            Enumerable.Range(0, iterations)
+                .Select(i =>
+                    TestRemindersHashInterval(remindersTable, (uint)random.Next(), (uint)random.Next(),
+                        remindersHashes)));
     }
 
     public async Task TestRemindersHashInterval(IReminderTable reminderTable, uint beginHash, uint endHash,
@@ -122,6 +132,27 @@ public class BaseReminderTableTestsRunner
         var areSame = returnedSet.SetEquals(expectedSet);
         Assert.True(areSame);
     }
+    
+    public async Task VerifyHash(ReminderTableData rows, uint beginHash, uint endHash,
+        uint[] remindersHashes)
+    {
+        var expectedHashes = beginHash < endHash
+            ? remindersHashes.Where(r => r > beginHash && r <= endHash)
+            : remindersHashes.Where(r => r > beginHash || r <= endHash);
+
+        var expectedSet = new HashSet<uint>(expectedHashes);
+        
+        Assert.NotNull(rows);
+        
+        var returnedHashes = rows.Reminders.Select(r => r.GrainRef.GetUniformHashCode());
+        var returnedSet = new HashSet<uint>(returnedHashes);
+
+        Assert.Equal(expectedSet.Count, returnedSet.Count);
+        var areSame = returnedSet.SetEquals(expectedSet);
+        Assert.True(areSame);
+    }
+    
+    
 
     private static ReminderEntry CreateReminder(GrainReference grainRef, string reminderName)
     {

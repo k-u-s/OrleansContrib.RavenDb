@@ -46,7 +46,7 @@ internal class RemindersTableManager
         var query = baseQuery.Where(el => el.ServiceId == ServiceId);
 
         if (begin < end)
-            query = query.Where(e => e.GrainRefConsistentHash >= begin && e.GrainRefConsistentHash < end);
+            query = query.Where(e => e.GrainRefConsistentHash > begin && e.GrainRefConsistentHash <= end);
         else if(begin != end)
             // For begin == end
             // Query the entire range so in this case do nothing
