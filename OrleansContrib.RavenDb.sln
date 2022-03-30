@@ -25,8 +25,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrleansContrib.RavenDb.Tester", "tests\OrleansContrib.RavenDb.Tester\OrleansContrib.RavenDb.Tester.csproj", "{14072710-9222-4194-A764-11393E424D15}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{F47A777D-A72C-40E7-83C6-403176F8AA06}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{7356F99D-F9C7-42C9-B018-723AF8960C30}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows = .github\workflows
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 	EndProjectSection
 EndProject
 Global
@@ -69,6 +71,7 @@ Global
 		{55EAA1F2-A771-46D0-A8FA-F65142232177} = {5C69AC1C-D5EB-478C-8489-B8D229A2417F}
 		{14072710-9222-4194-A764-11393E424D15} = {5C69AC1C-D5EB-478C-8489-B8D229A2417F}
 		{F47A777D-A72C-40E7-83C6-403176F8AA06} = {6B3183A0-BB0D-4D33-B96E-4B25659FF360}
+		{7356F99D-F9C7-42C9-B018-723AF8960C30} = {F47A777D-A72C-40E7-83C6-403176F8AA06}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C623DF5-CE05-4693-8661-019287431258}
