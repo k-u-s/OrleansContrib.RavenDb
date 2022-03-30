@@ -65,23 +65,23 @@ public abstract class BaseGrainStorageUnitTests : IAsyncLifetime
 
     [SkippableFact]
     [TestCategory("Functional")]
-    public virtual async Task Relational_WriteReadWriteRead100StatesInParallel()
+    public virtual async Task WriteReadWriteRead100StatesInParallel()
     {
         await PersistenceStorageTests.PersistenceStorage_WriteReadWriteReadStatesInParallel(
-            nameof(Relational_WriteReadWriteRead100StatesInParallel));
+            nameof(WriteReadWriteRead100StatesInParallel));
     }
 
     [SkippableFact]
     [TestCategory("Functional")]
-    public virtual async Task Relational_HashCollisionTests()
+    public virtual async Task HashCollisionTests()
     {
         await PersistenceStorageTests.PersistenceStorage_WriteReadWriteReadStatesInParallel(
-            nameof(Relational_HashCollisionTests), 2);
+            nameof(HashCollisionTests), 2);
     }
 
     [SkippableFact]
     [TestCategory("Functional")]
-    public virtual async Task Relational_WriteDuplicateFailsWithInconsistentStateException()
+    public virtual async Task WriteDuplicateFailsWithInconsistentStateException()
     {
         var exception = await PersistenceStorageTests
             .PersistenceStorage_WriteDuplicateFailsWithInconsistentStateException();
@@ -90,7 +90,7 @@ public abstract class BaseGrainStorageUnitTests : IAsyncLifetime
 
     [SkippableFact]
     [TestCategory("Functional")]
-    public virtual async Task Relational_WriteInconsistentFailsWithIncosistentStateException()
+    public virtual async Task WriteInconsistentFailsWithIncosistentStateException()
     {
         var exception = await PersistenceStorageTests
             .PersistenceStorage_WriteInconsistentFailsWithInconsistentStateException();
@@ -101,7 +101,7 @@ public abstract class BaseGrainStorageUnitTests : IAsyncLifetime
     [TestCategory("Functional")]
     public virtual async Task WriteReadCyrillic()
     {
-        await PersistenceStorageTests.PersistenceStorage_Relational_WriteReadIdCyrillic();
+        await PersistenceStorageTests.PersistenceStorage_WriteReadIdCyrillic();
     }
 
     [SkippableTheory, ClassData(typeof(StorageDataSetPlain<long>))]

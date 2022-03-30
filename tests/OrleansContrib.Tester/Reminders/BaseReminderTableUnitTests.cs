@@ -60,25 +60,25 @@ public abstract class BaseReminderTableUnitTests : IAsyncLifetime
 
 
     [SkippableFact]
-    public void RemindersTable_Raven_Init()
+    public void RemindersTable_Init()
     {
         // Empty to just verify that initialization done by framework passes
     }
 
     [SkippableFact, TestCategory("Functional")]
-    public async Task RemindersTable_Raven_RemindersRange()
+    public async Task RemindersTable_RemindersRange()
     {
-        await runner.RemindersRange(50);
+        await runner.RemindersRange(100);
     }
 
     [SkippableFact, TestCategory("Functional")]
-    public async Task RemindersTable_Raven_RemindersParallelUpsert()
+    public async Task RemindersTable_RemindersParallelUpsert()
     {
         await runner.RemindersParallelUpsert();
     }
 
     [SkippableFact, TestCategory("Functional")]
-    public async Task RemindersTable_Raven_ReminderSimple()
+    public async Task RemindersTable_ReminderSimple()
     {
         await runner.ReminderSimple();
     }

@@ -64,7 +64,7 @@ public class CommonStorageTestsRunner
     /// Writes a known inconsistent state to the storage and asserts an exception will be thrown.
     /// </summary>
     /// <returns></returns>
-    internal async Task PersistenceStorage_Relational_WriteReadIdCyrillic()
+    internal async Task PersistenceStorage_WriteReadIdCyrillic()
     {
         var grainTypeName = GrainTypeGenerator.GetGrainType<Guid>();
         var grainReference = GetTestReferenceAndState(0, null);
