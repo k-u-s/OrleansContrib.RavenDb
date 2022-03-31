@@ -92,7 +92,7 @@ public class BaseReminderIntegrationTestsRunner : IDisposable
         var id = Guid.NewGuid();
         Log.Info("Start Grain Id = {0}", id);
         var grain = GrainFactory.GetGrain<IReminderTestGrain>(id);
-        const int count = 5;
+        const int count = 3;
         var startReminderTasks = Enumerable.Range(0, count).Select(i =>
             {
                 var task = grain.StartReminder($"{Dr}_{i}");
