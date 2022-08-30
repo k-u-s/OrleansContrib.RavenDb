@@ -43,7 +43,7 @@ public class RavenGrainStorageUnitTests : BaseGrainStorageUnitTests, IClassFixtu
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
-                .ConfigureServices(services => services.AddSingleton(StoreHolder.CreateDocumentStore))
+                .ConfigureServices(services => services.AddSingleton(_databaseOptions.DocumentStore))
                 .AddRavenGrainStorage(
                     TestConstants.StorageProviderForTest,
                     _databaseOptions.ConfigureDefaultStoreOptions)
