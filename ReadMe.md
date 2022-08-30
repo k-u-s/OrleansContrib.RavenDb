@@ -10,6 +10,10 @@ This includes
  - [Storage](https://dotnet.github.io/orleans/docs/grains/grain_persistence/index.html) (IGrainStorage)
  - [Reminders](https://dotnet.github.io/orleans/docs/grains/timers_and_reminders.html#configuration) (IReminderTable)
 
+### Disclaimer
+
+Pretty much whole test suit is copied from main Orleans repo. More or less source for mentioned tests [reminders](https://github.com/dotnet/orleans/blob/bf807fdb8c39157f9ff73490b8368c94b9b64b2b/test/TesterInternal/RemindersTest/ReminderTableTestsBase.cs) and [persistence](https://github.com/dotnet/orleans/blob/bf807fdb8c39157f9ff73490b8368c94b9b64b2b/test/TesterInternal/StorageTests/CommonStorageTests.cs)
+
 ## Installation
 
 TODO: add nuget install cmd
