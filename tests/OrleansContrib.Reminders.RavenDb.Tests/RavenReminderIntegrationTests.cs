@@ -32,7 +32,7 @@ public class RavenReminderIntegrationTests : BaseReminderIntegrationTests, IClas
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
-                .ConfigureServices(services => services.AddSingleton(StoreHolder.CreateDocumentStore))
+                .ConfigureServices(services => services.AddSingleton(_databaseOptions.DocumentStore))
                 .UseRavenReminderService(_databaseOptions.ConfigureDefaultStoreOptionsBuilder)
                 ;
         }

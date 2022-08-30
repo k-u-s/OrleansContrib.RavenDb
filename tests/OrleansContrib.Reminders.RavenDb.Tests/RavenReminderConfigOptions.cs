@@ -1,16 +1,17 @@
 using Microsoft.Extensions.Options;
 using OrleansContrib.RavenDb.Tester;
 using OrleansContrib.Reminders.RavenDb.Options;
+using Raven.Client.Documents;
 
 namespace OrleansContrib.Reminders.RavenDb.Tests;
 
 public class ReminderConfigOptions
 {
-    private string _keyPrefix;
+    public IDocumentStore DocumentStore { get; }
     
     public ReminderConfigOptions()
     {
-        _keyPrefix = StoreHolder.CreateNextKeyPrefix();
+        DocumentStore = StoreHolder.CreateDocumentStore();
     }
     
     public void ConfigureDefaultStoreOptionsBuilder(OptionsBuilder<ReminderTableOptions> optionsBuilder)
@@ -20,7 +21,6 @@ public class ReminderConfigOptions
     
     public void ConfigureDefaultStoreOptions(ReminderTableOptions options)
     {
-        options.KeyPrefix = StoreHolder.CreateNextKeyPrefix();
         options.WaitForNonStaleMillis = StoreHolder.WaitForNonStaleMillis;
     }
 }

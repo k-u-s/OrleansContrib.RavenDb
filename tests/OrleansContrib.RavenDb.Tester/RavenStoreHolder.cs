@@ -47,13 +47,10 @@ public static class StoreHolder
         return EmbeddedServer.Instance;
     }
 
-    public static IDocumentStore CreateDocumentStore(IServiceProvider _)
-        => CurrentInstance.GetDocumentStore(DefaultDatabaseName);
-
-    public static string CreateNextKeyPrefix()
+    public static IDocumentStore CreateDocumentStore()
     {
         var nextNum = Interlocked.Add(ref _dbCounter, 1);
-        var dbName = $"TestPrefix-{nextNum}";
-        return dbName;
+        var dbName = $"{DefaultDatabaseName}-{nextNum}";
+        return CurrentInstance.GetDocumentStore(dbName);
     }
 }

@@ -43,7 +43,7 @@ public class RavenRemindersTableUnitTests : BaseReminderTableUnitTests, IClassFi
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
-                .ConfigureServices(services => services.AddSingleton(StoreHolder.CreateDocumentStore))
+                .ConfigureServices(services => services.AddSingleton(_databaseOptions.DocumentStore))
                 .UseRavenReminderService(_databaseOptions.ConfigureDefaultStoreOptionsBuilder)
                 ;
         }
@@ -77,7 +77,7 @@ public class RavenRemindersTableUnitTests : BaseReminderTableUnitTests, IClassFi
         var converter = ClusterFixture.HostedCluster.ServiceProvider.GetRequiredService<IGrainReferenceConverter>();
         //var documentStore = ClusterFixture.HostedCluster.ServiceProvider.GetRequiredService<IDocumentStore>();
         var sp = default(IServiceProvider);
-        var db = StoreHolder.CreateDocumentStore(sp);
+        var db = StoreHolder.CreateDocumentStore();
         ravenOptions.DocumentStoreProvider = _ => db;
 
         return new ReminderTable(

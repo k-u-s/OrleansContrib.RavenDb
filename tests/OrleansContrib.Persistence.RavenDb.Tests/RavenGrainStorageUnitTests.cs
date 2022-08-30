@@ -78,8 +78,7 @@ public class RavenGrainStorageUnitTests : BaseGrainStorageUnitTests, IClassFixtu
         _databaseOptions.ConfigureDefaultStoreOptions(ravenOptions);
 
         var sp = default(IServiceProvider);
-        var db = StoreHolder.CreateDocumentStore(sp);
-        ravenOptions.DocumentStoreProvider = _ => db;
+        ravenOptions.DocumentStoreProvider = _ => _databaseOptions.DocumentStore;
         
         var logger = LoggerFactory.CreateLogger<GrainStorage>();
         

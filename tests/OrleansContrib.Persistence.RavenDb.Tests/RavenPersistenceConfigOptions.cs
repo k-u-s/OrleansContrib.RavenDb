@@ -1,19 +1,17 @@
 using OrleansContrib.Persistence.RavenDb.Options;
 using OrleansContrib.RavenDb.Tester;
+using Raven.Client.Documents;
 
 namespace OrleansContrib.Persistence.RavenDb.Tests;
 
 public class PersistenceConfigOptions
 {
-    private string _keyPrefix;
+    public IDocumentStore DocumentStore { get; }
     
     public PersistenceConfigOptions()
     {
-        _keyPrefix = StoreHolder.CreateNextKeyPrefix();
+        DocumentStore = StoreHolder.CreateDocumentStore();
     }
     
-    public void ConfigureDefaultStoreOptions(GrainStorageOptions options)
-    {
-        options.KeyPrefix = _keyPrefix;
-    }
+    public void ConfigureDefaultStoreOptions(GrainStorageOptions options) { }
 }
