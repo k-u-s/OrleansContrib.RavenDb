@@ -24,13 +24,20 @@ public class RavenPersistenceIntegrationTests : BasePersistenceGrainIntegrationT
 
     public class SiloConfigurator : ISiloConfigurator
     {
+        private PersistenceConfigOptions _databaseOptions;
+        
+        public SiloConfigurator()
+        {
+            _databaseOptions = new();
+        }
+        
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
-                .ConfigureServices(services => services.AddSingleton(StoreHolder.DocumentStore))
+                .ConfigureServices(services => services.AddSingleton(StoreHolder.CreateDocumentStore))
                 .AddRavenGrainStorage(
                     TestConstants.StorageProviderForTest,
-                    PersistenceConfigOptions.ConfigureDefaultStoreOptions)
+                    _databaseOptions.ConfigureDefaultStoreOptions)
                 ;
         }
     }

@@ -22,11 +22,18 @@ public class RavenReminderIntegrationTests : BaseReminderIntegrationTests, IClas
 
     public class SiloConfigurator : ISiloConfigurator
     {
+        private ReminderConfigOptions _databaseOptions;
+        
+        public SiloConfigurator()
+        {
+            _databaseOptions = new();
+        }
+
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
-                .ConfigureServices(services => services.AddSingleton(StoreHolder.DocumentStore))
-                .UseRavenReminderService(ReminderConfigOptions.ConfigureDefaultStoreOptionsBuilder)
+                .ConfigureServices(services => services.AddSingleton(StoreHolder.CreateDocumentStore))
+                .UseRavenReminderService(_databaseOptions.ConfigureDefaultStoreOptionsBuilder)
                 ;
         }
     }

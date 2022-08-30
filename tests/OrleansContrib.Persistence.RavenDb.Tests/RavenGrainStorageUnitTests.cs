@@ -12,6 +12,7 @@ using OrleansContrib.Persistence.RavenDb.StorageProviders;
 using OrleansContrib.RavenDb.Tester;
 using OrleansContrib.Tester;
 using OrleansContrib.Tester.Persistence;
+using Raven.Client.Documents;
 using Xunit;
 
 namespace OrleansContrib.Persistence.RavenDb.Tests;
@@ -32,20 +33,30 @@ public class RavenGrainStorageUnitTests : BaseGrainStorageUnitTests, IClassFixtu
 
     public class SiloConfigurator : ISiloConfigurator
     {
+        private PersistenceConfigOptions _databaseOptions;
+
+        public SiloConfigurator()
+        {
+            _databaseOptions = new();
+        }
+        
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
-                .ConfigureServices(services => services.AddSingleton(StoreHolder.DocumentStore))
+                .ConfigureServices(services => services.AddSingleton(StoreHolder.CreateDocumentStore))
                 .AddRavenGrainStorage(
                     TestConstants.StorageProviderForTest,
-                    PersistenceConfigOptions.ConfigureDefaultStoreOptions)
+                    _databaseOptions.ConfigureDefaultStoreOptions)
                 ;
         }
     }
 
+    private PersistenceConfigOptions _databaseOptions;
+
     public RavenGrainStorageUnitTests(Fixture clusterFixture)
         : base(clusterFixture)
     {
+        _databaseOptions = new();
     }
 
     protected override ILoggerFactory CreateLoggerFactory()
@@ -64,10 +75,11 @@ public class RavenGrainStorageUnitTests : BaseGrainStorageUnitTests, IClassFixtu
     protected override Task<IGrainStorage> CreateGrainStorage()
     {
         var ravenOptions = new GrainStorageOptions();
-        PersistenceConfigOptions.ConfigureDefaultStoreOptions(ravenOptions);
+        _databaseOptions.ConfigureDefaultStoreOptions(ravenOptions);
 
         var sp = default(IServiceProvider);
-        ravenOptions.DocumentStoreProvider = _ => StoreHolder.DocumentStore;
+        var db = StoreHolder.CreateDocumentStore(sp);
+        ravenOptions.DocumentStoreProvider = _ => db;
         
         var logger = LoggerFactory.CreateLogger<GrainStorage>();
         

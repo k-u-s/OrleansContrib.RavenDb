@@ -12,6 +12,7 @@ using OrleansContrib.Reminders.RavenDb.Options;
 using OrleansContrib.Reminders.RavenDb.Reminders;
 using OrleansContrib.Tester;
 using OrleansContrib.Tester.Reminders;
+using Raven.Client.Documents;
 using Xunit;
 
 namespace OrleansContrib.Reminders.RavenDb.Tests;
@@ -32,17 +33,26 @@ public class RavenRemindersTableUnitTests : BaseReminderTableUnitTests, IClassFi
 
     public class SiloConfigurator : ISiloConfigurator
     {
+        private ReminderConfigOptions _databaseOptions;
+
+        public SiloConfigurator()
+        {
+            _databaseOptions = new();
+        }
+
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
-                .ConfigureServices(services => services.AddSingleton(StoreHolder.DocumentStore))
-                .UseRavenReminderService(ReminderConfigOptions.ConfigureDefaultStoreOptionsBuilder)
+                .ConfigureServices(services => services.AddSingleton(StoreHolder.CreateDocumentStore))
+                .UseRavenReminderService(_databaseOptions.ConfigureDefaultStoreOptionsBuilder)
                 ;
         }
     }
 
+    private ReminderConfigOptions _databaseOptions = new();
+
     public RavenRemindersTableUnitTests(Fixture environment) : base(environment) { }
-    
+
     protected override ILoggerFactory CreateLoggerFactory()
         => TestingUtils.CreateDefaultLoggerFactory($"{GetType()}.log", CreateFilters());
 
@@ -61,13 +71,14 @@ public class RavenRemindersTableUnitTests : BaseReminderTableUnitTests, IClassFi
     protected override IReminderTable CreateRemindersTable()
     {
         var ravenOptions = new ReminderTableOptions();
-        ReminderConfigOptions.ConfigureDefaultStoreOptions(ravenOptions);
+        _databaseOptions.ConfigureDefaultStoreOptions(ravenOptions);
         
         var options = Microsoft.Extensions.Options.Options.Create(ravenOptions);
         var converter = ClusterFixture.HostedCluster.ServiceProvider.GetRequiredService<IGrainReferenceConverter>();
         //var documentStore = ClusterFixture.HostedCluster.ServiceProvider.GetRequiredService<IDocumentStore>();
         var sp = default(IServiceProvider);
-        ravenOptions.DocumentStoreProvider = _ => StoreHolder.DocumentStore;
+        var db = StoreHolder.CreateDocumentStore(sp);
+        ravenOptions.DocumentStoreProvider = _ => db;
 
         return new ReminderTable(
             converter,
