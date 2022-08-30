@@ -14,8 +14,15 @@ namespace OrleansContrib.Persistence.RavenDb.Tests;
 public class RavenPersistenceIntegrationTests : BasePersistenceGrainIntegrationTests,
     IClassFixture<RavenPersistenceIntegrationTests.Fixture>
 {
+    private static PersistenceConfigOptions _databaseOptions;
+
     public class Fixture : BasePersistenceTestClusterFixture
     {
+        public Fixture()
+        {
+            _databaseOptions = new();
+        }
+        
         protected override void ConfigurePersistenceTestCluster(TestClusterBuilder builder)
         {
             builder.AddSiloBuilderConfigurator<SiloConfigurator>();
@@ -24,13 +31,6 @@ public class RavenPersistenceIntegrationTests : BasePersistenceGrainIntegrationT
 
     public class SiloConfigurator : ISiloConfigurator
     {
-        private PersistenceConfigOptions _databaseOptions;
-        
-        public SiloConfigurator()
-        {
-            _databaseOptions = new();
-        }
-        
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder

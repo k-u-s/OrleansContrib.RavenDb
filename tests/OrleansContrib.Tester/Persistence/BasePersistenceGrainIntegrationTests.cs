@@ -11,7 +11,6 @@ public abstract class BasePersistenceGrainIntegrationTests : OrleansTestingBase
 {
     private readonly GrainPersistenceTestsRunner basicPersistenceTestsRunner;
 
-
     protected BasePersistenceGrainIntegrationTests(
         ITestOutputHelper output,
         BasePersistenceTestClusterFixture fixture)

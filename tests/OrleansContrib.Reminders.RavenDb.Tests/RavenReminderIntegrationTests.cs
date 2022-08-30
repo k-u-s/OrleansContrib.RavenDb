@@ -12,8 +12,15 @@ namespace OrleansContrib.Reminders.RavenDb.Tests;
 [TestCategory(TestConstants.Category.Reminders), TestCategory(StoreHolder.DatabaseCategory)]
 public class RavenReminderIntegrationTests : BaseReminderIntegrationTests, IClassFixture<RavenReminderIntegrationTests.Fixture>
 {
+    private static ReminderConfigOptions _databaseOptions;
+
     public class Fixture : BaseReminderTestClusterFixture
     {
+        public Fixture()
+        {
+            _databaseOptions = new();
+        }
+
         protected override void ConfigureReminderTestCluster(TestClusterBuilder builder)
         {
             builder.AddSiloBuilderConfigurator<SiloConfigurator>();
@@ -22,13 +29,6 @@ public class RavenReminderIntegrationTests : BaseReminderIntegrationTests, IClas
 
     public class SiloConfigurator : ISiloConfigurator
     {
-        private ReminderConfigOptions _databaseOptions;
-        
-        public SiloConfigurator()
-        {
-            _databaseOptions = new();
-        }
-
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
